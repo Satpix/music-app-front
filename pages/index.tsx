@@ -1,12 +1,14 @@
 import React from 'react';
-
+import { MainContainer, MainText } from './styled';
 
 const Index = () => {
-    return (
-      <div>
+  return (
+    <MainContainer>
+      <MainText>
         Главная страница
-      </div>
-    )
+      </MainText>
+    </MainContainer>
+  )
 }
 
 export default Index;
