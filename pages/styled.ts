@@ -5,10 +5,10 @@ export const MainContainer = styled.div`
   display:flex;
   align-items: center;
   justify-content: center;
-  background-color: green;
+  background-color: white;
   height: 100vh;
 `;
 
-export const MainText = styled.p`
-  padding: 30px;
+export const Text = styled.p`
+  padding: 10px;
 `;
