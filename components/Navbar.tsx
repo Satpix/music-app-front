@@ -105,7 +105,7 @@ export default function Navbar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Persistent drawer
+            Music application
           </Typography>
         </Toolbar>
       </AppBar>
