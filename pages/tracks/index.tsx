@@ -2,16 +2,24 @@ import { Box, Button, Card, Grid } from '@mui/material';
 import React from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { useRouter } from 'next/router';
-import { ITrack } from '../../types/track';
-import TrackList from 'components/TrackList';
+import { ITrack } from 'types/track';
+import TrackList from 'components/Track/TrackList';
+import { fetchTracks } from '../../store/actions-creators/track';
+import { NextThunkDispatch, wrapper } from '../../store';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 
 const Index = () => {
   const router = useRouter();
-  const tracks: ITrack[] = [
-    {id: '1', name: 'Трек 1', artist: 'Артист 1', text: 'Текст 1', listens: 2, audio: 'http://localhost:5003/audio/12b13055-d7b4-4a6b-b3cf-79961d688291.mp3', picture: 'http://localhost:5003/image/08cba8ac-e4eb-4e26-8d6d-0d0e16658480.jpeg', comments: []},
-    {id: '2', name: 'Трек 2', artist: 'Артист 2', text: 'Текст 2', listens: 5, audio: 'http://localhost:5003/audio/12b13055-d7b4-4a6b-b3cf-79961d688291.mp3', picture: 'http://localhost:5003/image/08cba8ac-e4eb-4e26-8d6d-0d0e16658480.jpeg', comments: []},
-    {id: '3', name: 'Трек 3', artist: 'Артист 3', text: 'Текст 3', listens: 12, audio: 'http://localhost:5003/audio/12b13055-d7b4-4a6b-b3cf-79961d688291.mp3', picture: 'http://localhost:5003/image/08cba8ac-e4eb-4e26-8d6d-0d0e16658480.jpeg', comments: []},
-  ]
+
+  const { tracks, error } = useTypedSelector(state => state.track);
+
+  if (error) {
+    return <MainLayout>
+      <h1>{error}</h1>
+    </MainLayout>
+  }
+  console.log(tracks)
+
   return (
     <MainLayout>
       <Grid container justifyContent="center">
@@ -30,3 +38,22 @@ const Index = () => {
 }
 
 export default Index;
+
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   store => async ({ req, res, ...etc }) =>
+//   {
+//       const dispatch = store.dispatch as NextThunkDispatch;
+//       await dispatch(fetchTracks());
+
+//       return { props: {} }
+//   }
+// );
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  store => async () => {
+    const dispatch = store.dispatch as NextThunkDispatch;
+    await dispatch(fetchTracks());
+
+    return { props: {} }
+  }
+);

@@ -19,14 +19,15 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useRouter } from 'next/router';
-
+// import { Image } from './styled';
+import Image from "next/image";
 const drawerWidth = 240;
 
 const menuItems = [
-  { text: 'Главная', href: '/'},
-  { text: 'Список треков', href: '/tracks'},
-  { text: 'Список альбомов', href: '/albums'},
-  { text: 'Любимые треки', href: '/favorite'},
+  { text: 'Главная', href: '/' },
+  { text: 'Список треков', href: '/tracks' },
+  { text: 'Список альбомов', href: '/albums' },
+  { text: 'Любимые треки', href: '/favorite' },
 ]
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -122,7 +123,11 @@ export default function Navbar() {
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
+        <DrawerHeader >
+          <h1>Neon</h1>
+          <Box ml={3} >
+            <Image src='/../public/logo5.png' alt='Logo' width={50} height={50} />
+          </Box>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
