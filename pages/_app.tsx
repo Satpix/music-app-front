@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {Provider} from 'react-redux';
 import {AppProps} from 'next/app';
 import { wrapper } from '../store';
+import '../styles/global.css';
 
 const MyApp: FC<AppProps> = ({Component, ...rest}) => {
   const {store, props} = wrapper.useWrappedStore(rest);

@@ -8,11 +8,32 @@ import { ITrack } from 'types/track';
 
 import { Image } from './styled';
 import axios from 'axios';
+import { useInput } from 'hooks/useInput';
+import { GetServerSideProps } from 'next';
 
-const TrackPage = ({serverTrack}) => {
+interface TrackPageProps {
+  serverTrack: ITrack,
+}
 
-  const [track, setTrack] = useState(serverTrack);
+const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
+
+  const [track, setTrack] = useState<ITrack>(serverTrack);
   const router = useRouter();
+  const username = useInput('');
+  const text = useInput('');
+  const addComment = async () => {
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API}/tracks/comment`, {
+        username: username.value,
+        text: text.value,
+        trackId: track._id,
+      })
+      setTrack({ ...track, comments: [...track.comments, response.data]})
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <MainLayout>
       <Button onClick={() => { router.push('/tracks') }}
@@ -34,17 +55,23 @@ const TrackPage = ({serverTrack}) => {
       <h1>Комментарии</h1>
       <Grid container>
         <TextField
-          label="Имя"
+          label="Ваше Имя"
+          fullWidth
+          {...username}
+        />
+        <TextField
+          label="Комментарий"
           fullWidth
           multiline
           rows={4}
+          {...text}
         />
-        <Button>Отправить</Button>
+        <Button onClick={addComment}>Отправить</Button>
         <div>
           {track.comments.map(comment =>
             <div>
               <div>Автор - {comment.username}</div>
-              <div>Комметтарий - {comment.text}</div>
+              <div>Комментарий - {comment.text}</div>
             </div>
           )}
         </div>
@@ -55,7 +82,7 @@ const TrackPage = ({serverTrack}) => {
 
 export default TrackPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ params}) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API}/tracks/` + params.id)
   return {
     props: {

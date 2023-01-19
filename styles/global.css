@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'Helvetica Neue Thin';
+  src: url("../public/fonts/HelveticaNeueThin/HelveticaNeueThin.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Helvetica Thin';
+  src: url("../public/fonts/HelveticaThin/HelveticaThin.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Roboto Light';
+  src: url("../public/fonts/RobotoLight/RobotoLight.woff") format("woff"),
+  url("../public/fonts/RobotoLight/RobotoLight.woff2") format("woff2");
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto Light', sans-serif;
+  overflow: hidden;
+}
