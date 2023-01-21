@@ -35,7 +35,7 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
   }
 
   return (
-    <MainLayout>
+    <MainLayout title={'Music app - ' + track.name + ' - ' + track.artist} keywords={'Music' + track.name + track.artist}>
       <Button onClick={() => { router.push('/tracks') }}
         variant={"outline"}
         sx={{ fontSize: 32 }}

@@ -14,14 +14,14 @@ const Index = () => {
   const { tracks, error } = useTypedSelector(state => state.track);
 
   if (error) {
-    return <MainLayout>
+    return <MainLayout title='Error - music app'>
       <h1>{error}</h1>
     </MainLayout>
   }
   console.log(tracks)
 
   return (
-    <MainLayout>
+    <MainLayout title='List of tracks - music app'>
       <Grid container justifyContent="center">
         <Card sx={{ width: 900 }}>
           <Box p={3}>

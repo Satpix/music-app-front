@@ -3,6 +3,7 @@ import * as React from 'react';
 
 interface StepWrapperProps {
   activeStep: number;
+  children?: JSX.Element,
 }
 const steps = ['Информация о треке', 'Загрузите обложку', 'Загрузите трек'];
 const StepWrapper: React.FC<StepWrapperProps> = ({ activeStep, children }) => {

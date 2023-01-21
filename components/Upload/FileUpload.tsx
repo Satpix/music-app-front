@@ -5,6 +5,7 @@ import { useRef } from 'react';
 interface FileUploadProps {
   setFile: Function,
   accept: string,
+  children?: JSX.Element,
 }
 const FileUpload: React.FC<FileUploadProps> = ({ setFile, accept, children }) => {
   const ref = useRef<HTMLInputElement>();

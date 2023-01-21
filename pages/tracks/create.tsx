@@ -53,7 +53,7 @@ const Create = () => {
   }
 
   return (
-    <MainLayout>
+    <MainLayout title='Upload track - music app'>
       <StepWrapper activeStep={activeStep}>
         <h1>Загрузка треков</h1>
         {uploadComponents[activeStep]}
