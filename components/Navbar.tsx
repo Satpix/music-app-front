@@ -16,18 +16,20 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { useRouter } from 'next/router';
-// import { Image } from './styled';
 import Image from "next/image";
+import { Collections, Favorite, Home } from '@mui/icons-material';
+import ListIcon from '@mui/icons-material/List';
+
+import * as S from './styled';
+
 const drawerWidth = 240;
 
 const menuItems = [
-  { text: 'Главная', href: '/' },
-  { text: 'Список треков', href: '/tracks' },
-  { text: 'Список альбомов', href: '/albums' },
-  { text: 'Любимые треки', href: '/favorite' },
+  { text: 'Home', href: '/', icon: (<Home />) },
+  { text: 'Track list', href: '/tracks', icon: (<ListIcon />) },
+  { text: 'Albums', href: '/albums', icon: (<Collections />) },
+  { text: 'Liked songs', href: '/favorite', icon: (<Favorite />) },
 ]
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -123,22 +125,20 @@ export default function Navbar() {
         anchor="left"
         open={open}
       >
-        <DrawerHeader >
-          <h1>Neon</h1>
-          <Box ml={3} >
-            <Image src='/../public/logo5.png' alt='Logo' width={50} height={50} />
-          </Box>
+        <DrawerHeader sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Image src='/../public/logo5.png' alt='Logo' width={50} height={50} />
+          <S.NavTitle>Neon</S.NavTitle>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {menuItems.map(({ text, href }, index) => (
+          {menuItems.map(({ text, href, icon }) => (
             <ListItem key={href} disablePadding onClick={() => router.push(href)}>
               <ListItemButton>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {icon}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>

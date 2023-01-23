@@ -1,12 +1,17 @@
 import { Pause, PlayArrow, Delete } from '@mui/icons-material';
-import { Grid } from '@mui/material';
+import { Grid, Tooltip } from '@mui/material';
 import { IconButton } from '@mui/material';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import * as React from 'react';
-import { ITrack } from 'types/track';
-import { useActions } from '../../hooks/useActions';
+import { useDispatch } from 'react-redux';
 
-import { CardContainer, Image, TextName, TextArtist } from './styled';
+import { useActions } from 'hooks/useActions';
+import { deleteTracks } from 'store/actions-creators/track';
+import { NextThunkDispatch } from 'store/index';
+import { ITrack } from 'types/track';
+
+import { CardContainer, TextName, TextArtist } from './styled';
 
 interface TrackItemProps {
   track: ITrack;
@@ -15,31 +20,47 @@ interface TrackItemProps {
 
 const TrackItem: React.FC<TrackItemProps> = ({ track, active = false }) => {
   const router = useRouter()
-  const {playTrack, pauseTrack, setActiveTrack} = useActions()
+  const { playTrack, pauseTrack, setActiveTrack } = useActions()
+  const dispatch = useDispatch() as NextThunkDispatch;
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    await dispatch(await deleteTracks(track._id));
+  }
 
   const play = (e) => {
-      e.stopPropagation()
-      console.log(track);
-      setActiveTrack(track)
-      pauseTrack()
+    e.stopPropagation()
+    console.log(track);
+    setActiveTrack(track)
+    pauseTrack()
+  }
+
+  const loaderApiImage = () => {
+    return `${process.env.NEXT_PUBLIC_BASE_API}/${track?.picture}`;
   }
 
   return (
     <CardContainer onClick={() => router.push('/tracks/' + track._id)}>
+      <Tooltip title={active ? "Pause" : "Play"}>
       <IconButton onClick={play}>
         {!active
           ? <PlayArrow />
           : <Pause />
         }
       </IconButton>
-      <Image src={`${process.env.NEXT_PUBLIC_BASE_API}/${track.picture}`} alt={track.name || 'Image'} />
-      <Grid container direction="column" sx={{ width: 200, margin: '0 20px' }}>
+      </Tooltip>
+      {track?.picture ?
+        <Image loader={loaderApiImage} src={`${process.env.NEXT_PUBLIC_BASE_API}/${track?.picture}`} alt={track.name} width={50} height={50} />
+        :
+        <Image src='/../public/track_picture.png' alt={track.name} width={50} height={50} />
+      }
+      <Grid container direction="column" sx={{ maxWidth: 'calc(90vw - 260px)', margin: '0 20px' }}>
         <TextName>{track.name}</TextName>
         <TextArtist>{track.artist}</TextArtist>
       </Grid>
       {active && <div>02:42 / 03:22</div>}
-      <IconButton style={{ marginLeft: 'auto' }}>
-        <Delete onClick={e => e.stopPropagation()} />
+      <IconButton sx={{ marginLeft: 'auto' }}>
+        <Delete onClick={e => handleDelete(e)} />
       </IconButton>
     </CardContainer>
   );
