@@ -1,4 +1,4 @@
-import { Pause, PlayArrow, VolumeUp } from '@mui/icons-material';
+import { Pause, PlayArrow, SkipNext, SkipPrevious, VolumeUp } from '@mui/icons-material';
 import { Grid, IconButton, Tooltip } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -13,7 +13,9 @@ let previosActive: any;
 
 const Player = () => {
   const { pause, volume, active, duration, currentTime, audio } = useTypedSelector(state => state.player)
-  const { pauseTrack, playTrack, setVolume, setCurrentTime, setDuration, setAudio } = useActions();
+  const { tracks } = useTypedSelector(state => state.track)
+
+  const { pauseTrack, playTrack, setVolume, setCurrentTime, setDuration, setAudio, setActiveTrack } = useActions();
 
   const onPlay = () => {
     if (pause) {
@@ -34,6 +36,27 @@ const Player = () => {
     audio.currentTime = (Number(e.target.value));
     setCurrentTime(Number(e.target.value));
   }
+
+  const onNext = () => {
+    if (active) {
+      const currentIndexTrack = tracks.findIndex(track => active?._id === track._id);
+      console.log(currentIndexTrack);
+      const nextIndexTrack = (currentIndexTrack < tracks.length - 1) ? currentIndexTrack + 1 : 0;
+      console.log(nextIndexTrack);
+      setActiveTrack(tracks[nextIndexTrack]);
+      playTrack();
+    }
+  }
+  
+  const onPreview = () => {
+    if (active) {
+      const currentIndexTrack = tracks.findIndex(track => active?._id === track._id);
+      const previousIndexTrack = (currentIndexTrack || tracks.length) - 1;
+      setActiveTrack(tracks[previousIndexTrack]);
+      playTrack();
+    }
+  }
+
 
   useEffect(() => {
     if (previosActive !== active) {
@@ -66,22 +89,32 @@ const Player = () => {
   }
   return (
     <S.PlayerContainer>
-      <Grid container direction="row" sx={{ width: "300px" }}>
-        <Tooltip title={pause ? "Play" : "Pause"}>
-          <IconButton onClick={onPlay}>
-            {pause
-              ? <PlayArrow />
-              : <Pause />
-            }
-          </IconButton>
-        </Tooltip>
-        <Grid container direction="column" sx={{ width: 200, margin: '0 20px' }}>
-          <S.TextName>{active?.name}</S.TextName>
-          <S.TextArtist>{active?.artist}</S.TextArtist>
-        </Grid>
+      <Grid container direction="column" sx={{ width: 200, margin: '0 20px' }}>
+        <S.TextName>{active?.name}</S.TextName>
+        <S.TextArtist>{active?.artist}</S.TextArtist>
       </Grid>
-      <Grid container direction="row" wrap="nowrap" justifyContent="center" alignItems="center" sx={{ width: 'calc(90vw - 550px)' }}>
-        <TrackProgress left={currentTime} right={duration} onChange={changeCurrentTime} />
+      <Grid container direction="column" wrap="nowrap" justifyContent="center" alignItems="center" sx={{ width: 'calc(90vw - 550px)' }}>
+        <Grid container direction="row" justifyContent="center">
+          <Tooltip title="Previous">
+            <IconButton onClick={onPreview}>
+              <SkipPrevious />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={pause ? "Play" : "Pause"}>
+            <IconButton onClick={onPlay}>
+              {pause
+                ? <PlayArrow />
+                : <Pause />
+              }
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Next">
+            <IconButton onClick={onNext}>
+              <SkipNext />
+            </IconButton>
+          </Tooltip>
+        </Grid>
+        <TrackProgress left={currentTime} right={duration} onChange={changeCurrentTime} isVolume={false} />
       </Grid>
       <Grid container direction="row" wrap="nowrap" justifyContent="space-between" alignItems="center" sx={{ width: '250px' }}>
         <VolumeUp style={{ marginLeft: 'auto' }} />
