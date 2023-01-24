@@ -3,8 +3,9 @@ import * as React from 'react';
 
 interface StepWrapperProps {
   activeStep: number;
+  children?: JSX.Element,
 }
-const steps = ['Информация о треке', 'Загрузите обложку', 'Загрузите трек'];
+const steps = ['Track information', 'Upload a cover', 'Upload a track'];
 const StepWrapper: React.FC<StepWrapperProps> = ({ activeStep, children }) => {
   return (
     <Container>

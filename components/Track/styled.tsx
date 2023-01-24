@@ -5,18 +5,23 @@ export const CardContainer = styled(Card)`
   display: flex;
   align-items: center;
   padding: 10px;
-  margin: 20px;
+  margin: 16px;
 `;
 
-export const TextName = styled.div`
+export const TextName = styled.p`
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
 `;
 
-export const TextArtist = styled.div`
+export const TextArtist = styled(TextName)`
   font-size: 12px;
   color: gray;
 `;
 
-export const Image  =  styled.img`
+export const Image = styled.img`
   width: 70px;
   height: 70px;
 `;
@@ -27,7 +32,18 @@ export const PlayerContainer = styled.div`
   position: fixed;
   bottom: 0;
   display: flex;
+  wrap:nowrap;
+  direction: row;
+  justify-content: space-between;
   align-items: center;
   padding: 0 10px;
   background-color: lightgray;
+`;
+
+export const InputContainer = styled.div`
+  margin: 0 auto;
+  width: 'none';
+  input[type=range]{
+    width: ${({ isVolume }) => isVolume ? '150px' : 'calc(90vw - 630px)'};
+  }
 `;

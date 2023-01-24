@@ -3,21 +3,21 @@ import * as React from 'react';
 
 const UploadInfoTrack = ({ values }) => {
   return (
-    <Grid container direction={"column"} sx={{ padding: 20 }}>
+    <Grid container direction={"column"} sx={{ padding: 5 }}>
       <TextField
         {...values.name}
-        sx={{ marginTop: '10px' }}
-        label={"Название трека"}
+        sx={{ marginTop: '10px', width: '400px' }}
+        label={"Name of the track"}
       />
       <TextField
         {...values.artist}
-        sx={{ marginTop: '10px' }}
-        label={"Имя исполнителя"}
+        sx={{ marginTop: '10px', width: '400px' }}
+        label={"Artist"}
       />
       <TextField
         {...values.text}
-        sx={{ marginTop: '10px' }}
-        label={"Слова к треку"}
+        sx={{ marginTop: '10px', width: '400px' }}
+        label={"Lyrics for the track"}
         multiline
         rows={3}
       />

@@ -19,10 +19,11 @@
       "pages/*": ["./pages/*"],
       "public/*": ["./public/*"],
       "hooks/*": ["./hooks/*"],
+      "store/*": ["./store/*"],
     },
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/ThemeConfig.js"],
   "exclude": ["node_modules"],
 }

@@ -7,12 +7,12 @@ import { MainContainer, Text } from './styled';
 const Index = () => {
   return (
     <MainContainer>
-      <MainLayout>
+      <MainLayout title='Main page - music app'>
         <Text>
-          Главная страница
+          Main page
         </Text>
         <Text>
-          Треки
+          Tracks
         </Text>
       </MainLayout>
     </MainContainer>
