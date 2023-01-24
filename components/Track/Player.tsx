@@ -1,7 +1,7 @@
 import { Pause, PlayArrow, VolumeUp } from '@mui/icons-material';
 import { Grid, IconButton, Tooltip } from '@mui/material';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ITrack } from 'types/track';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
@@ -9,11 +9,11 @@ import TrackProgress from './TrackProgress';
 
 import * as S from './styled';
 
-let audio: HTMLAudioElement;
+let previosActive: any;
 
 const Player = () => {
-  const { pause, volume, active, duration, currentTime } = useTypedSelector(state => state.player)
-  const { pauseTrack, playTrack, setVolume, setCurrentTime, setDuration } = useActions();
+  const { pause, volume, active, duration, currentTime, audio } = useTypedSelector(state => state.player)
+  const { pauseTrack, playTrack, setVolume, setCurrentTime, setDuration, setAudio } = useActions();
 
   const onPlay = () => {
     if (pause) {
@@ -23,7 +23,6 @@ const Player = () => {
     } else {
       pauseTrack()
       audio.pause();
-
     }
   }
   const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,17 +35,21 @@ const Player = () => {
     setCurrentTime(Number(e.target.value));
   }
 
-
   useEffect(() => {
-    if (!audio) {
-      audio = new Audio()
-    } else {
-      setAudio();
-      onPlay();
+    if (previosActive !== active) {
+      if (!audio) {
+        setAudio(new Audio());
+      } else {
+        setActiveAudio();
+        audio.play();
+      }
+      if (active !== null && active !== previosActive) {
+        previosActive = active;
+      }
     }
   }, [active])
 
-  const setAudio = () => {
+  const setActiveAudio = () => {
     if (active) {
       audio.src = `${process.env.NEXT_PUBLIC_BASE_API}/${active.audio}`;
       audio.volume = volume / 100;

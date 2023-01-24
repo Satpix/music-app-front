@@ -21,8 +21,9 @@ interface TrackItemProps {
 }
 
 const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
+  const { pause, volume, active, duration, currentTime, audio } = useTypedSelector(state => state.player)
   const router = useRouter()
-  const { playTrack, pauseTrack, setActiveTrack } = useActions()
+  const { playTrack, pauseTrack, setActiveTrack, setAudio } = useActions()
   const [ isActive, setIsActive ] = useState(false);
   const dispatch = useDispatch() as NextThunkDispatch;
 
@@ -33,11 +34,21 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
 
   const play = (e) => {
     e.stopPropagation()
-    setActiveTrack(track)
-    pauseTrack()
+    if (isActive) {
+      if (pause) {
+        playTrack();
+        audio.play();
+      } else {
+        pauseTrack();
+        audio.pause();
+      }
+    } else {
+      setActiveTrack(track);
+      playTrack();
+    }
+    if(isActive){
+    }
   }
-
-  const { active } = useTypedSelector(state => state.player)
 
   const loaderApiImage = () => {
     return `${process.env.NEXT_PUBLIC_BASE_API}/${track?.picture}`;
@@ -53,11 +64,11 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
 
   return (
     <CardContainer onClick={() => router.push('/tracks/' + track._id)}>
-      <Tooltip title={isActive ? "Pause" : "Play"}>
+      <Tooltip title={(isActive && !pause) ? "Pause" : "Play"}>
         <IconButton onClick={(e) => play(e)}>
-          {!isActive
-            ? <PlayArrow />
-            : <Pause />
+          {(isActive && !pause)
+            ? <Pause />
+            : <PlayArrow/>
           }
         </IconButton>
       </Tooltip>
