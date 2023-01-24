@@ -13,17 +13,17 @@ let audio: HTMLAudioElement;
 
 const Player = () => {
   const { pause, volume, active, duration, currentTime } = useTypedSelector(state => state.player)
-  const { pauseTrack, playTrack, setVolume, setCurrentTime, setDuration, setActiveTrack } = useActions();
+  const { pauseTrack, playTrack, setVolume, setCurrentTime, setDuration } = useActions();
 
-  const onPlay = (e) => {
+  const onPlay = () => {
     if (pause) {
       playTrack()
-      audio.pause();
       audio.play();
 
     } else {
       pauseTrack()
       audio.pause();
+
     }
   }
   const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,13 +36,13 @@ const Player = () => {
     setCurrentTime(Number(e.target.value));
   }
 
+
   useEffect(() => {
     if (!audio) {
-      audio = new Audio();
-      setAudio();
+      audio = new Audio()
     } else {
       setAudio();
-      onPlay;
+      onPlay();
     }
   }, [active])
 
@@ -63,7 +63,7 @@ const Player = () => {
   }
   return (
     <S.PlayerContainer>
-      <Grid container direction="row" sx={{ width: "300px"}}>
+      <Grid container direction="row" sx={{ width: "300px" }}>
         <Tooltip title={pause ? "Play" : "Pause"}>
           <IconButton onClick={onPlay}>
             {pause

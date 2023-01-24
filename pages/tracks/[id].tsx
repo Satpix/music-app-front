@@ -31,7 +31,6 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
       })
       setTrack({ ...track, comments: [...track.comments, response.data] })
     } catch (e) {
-      console.log(e);
     }
   }
 

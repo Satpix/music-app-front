@@ -12,15 +12,18 @@ import { NextThunkDispatch } from 'store/index';
 import { ITrack } from 'types/track';
 
 import { CardContainer, TextName, TextArtist } from './styled';
+import { useTypedSelector } from 'hooks/useTypedSelector';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 interface TrackItemProps {
   track: ITrack;
-  active?: boolean;
 }
 
-const TrackItem: React.FC<TrackItemProps> = ({ track, active = false }) => {
+const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const router = useRouter()
   const { playTrack, pauseTrack, setActiveTrack } = useActions()
+  const [ isActive, setIsActive ] = useState(false);
   const dispatch = useDispatch() as NextThunkDispatch;
 
   const handleDelete = async (e) => {
@@ -30,24 +33,33 @@ const TrackItem: React.FC<TrackItemProps> = ({ track, active = false }) => {
 
   const play = (e) => {
     e.stopPropagation()
-    console.log(track);
     setActiveTrack(track)
     pauseTrack()
   }
+
+  const { active } = useTypedSelector(state => state.player)
 
   const loaderApiImage = () => {
     return `${process.env.NEXT_PUBLIC_BASE_API}/${track?.picture}`;
   }
 
+  useEffect(() => {
+    if (active?._id === track._id) {
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+    }
+  }, [active])
+
   return (
     <CardContainer onClick={() => router.push('/tracks/' + track._id)}>
-      <Tooltip title={active ? "Pause" : "Play"}>
-      <IconButton onClick={play}>
-        {!active
-          ? <PlayArrow />
-          : <Pause />
-        }
-      </IconButton>
+      <Tooltip title={isActive ? "Pause" : "Play"}>
+        <IconButton onClick={(e) => play(e)}>
+          {!isActive
+            ? <PlayArrow />
+            : <Pause />
+          }
+        </IconButton>
       </Tooltip>
       {track?.picture ?
         <Image loader={loaderApiImage} src={`${process.env.NEXT_PUBLIC_BASE_API}/${track?.picture}`} alt={track.name} width={50} height={50} />
@@ -58,7 +70,6 @@ const TrackItem: React.FC<TrackItemProps> = ({ track, active = false }) => {
         <TextName>{track.name}</TextName>
         <TextArtist>{track.artist}</TextArtist>
       </Grid>
-      {active && <div>02:42 / 03:22</div>}
       <IconButton sx={{ marginLeft: 'auto' }}>
         <Delete onClick={e => handleDelete(e)} />
       </IconButton>

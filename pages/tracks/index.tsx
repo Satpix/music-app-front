@@ -37,7 +37,6 @@ const Index = () => {
       <h1>{error}</h1>
     </MainLayout>
   }
-  console.log(tracks)
 
   return (
     <MainLayout title='List of tracks - music app'>
