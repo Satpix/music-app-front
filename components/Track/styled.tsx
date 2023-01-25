@@ -37,14 +37,13 @@ export const PlayerContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 10px;
-  background-color: lightgray;
+  background-color: #eeeeee;
+  // background-color: ${({ theme }) => theme.colors.primaryBlue}
 `;
 
 export const InputContainer = styled.div`
   margin: 0 auto;
   width: 'none';
-  margin: 2px 5px 0px 5px;
-  input[type=range]{
-    width: ${({ isVolume }) => isVolume ? '150px' : 'calc(90vw - 630px)'};
-  }
+  margin: -2px 10px 0px 10px;
+  width: ${({ isVolume }) => isVolume ? 'calc(20vw - 100px)' : 'calc(70vw - 200px)'};
 `;

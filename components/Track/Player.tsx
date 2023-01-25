@@ -1,4 +1,4 @@
-import { Pause, PlayArrow, SkipNext, SkipPrevious, VolumeUp } from '@mui/icons-material';
+import { Pause, PlayArrow, SkipNext, SkipPrevious, Speed, VolumeUp } from '@mui/icons-material';
 import { Grid, IconButton, Tooltip } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -8,12 +8,16 @@ import { useTypedSelector } from '../../hooks/useTypedSelector';
 import TrackProgress from './TrackProgress';
 
 import * as S from './styled';
+import SimpleDialogWithCircles from '../Dialogs/SimpleDialogWithCircles';
 
 let previosActive: any;
 
 const Player = () => {
   const { pause, volume, active, duration, currentTime, audio } = useTypedSelector(state => state.player)
   const { tracks } = useTypedSelector(state => state.track)
+  const [openSpeedDialog, setOpenSpeedDialog] = useState(false);
+  const speedList = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2];
+  const [selectedSpeedValue, setSelectedSpeedValue] = useState(speedList[2]);
 
   const { pauseTrack, playTrack, setVolume, setCurrentTime, setDuration, setAudio, setActiveTrack } = useActions();
 
@@ -45,7 +49,7 @@ const Player = () => {
       playTrack();
     }
   }
-  
+
   const onPreview = () => {
     if (active) {
       const currentIndexTrack = tracks.findIndex(track => active?._id === track._id);
@@ -54,7 +58,6 @@ const Player = () => {
       playTrack();
     }
   }
-
 
   useEffect(() => {
     if (previosActive !== active) {
@@ -79,23 +82,39 @@ const Player = () => {
       }
       audio.ontimeupdate = () => {
         setCurrentTime(Math.ceil(audio.currentTime));
-        if(audio.currentTime === audio.duration) {
+        if (audio.currentTime === audio.duration) {
           onNext();
         }
       }
     }
   }
+
+  const handleClose = (value: number) => {
+    setOpenSpeedDialog(false);
+    setSelectedSpeedValue(value);
+    audio.playbackRate = value;
+  };
+
+  const handleClickOpen = () => {
+    setOpenSpeedDialog(true);
+  };
+
   if (!active) {
     return null;
   }
   return (
     <S.PlayerContainer>
-      <Grid container direction="column" sx={{ width: 200, margin: '0 20px' }}>
+      <Grid container direction="column" sx={{ width: '10vw', margin: '0 20px' }}>
         <S.TextName>{active?.name}</S.TextName>
         <S.TextArtist>{active?.artist}</S.TextArtist>
       </Grid>
-      <Grid container direction="column" wrap="nowrap" justifyContent="center" alignItems="center" sx={{ width: 'calc(90vw - 550px)' }}>
+      <Grid container direction="column" wrap="nowrap" justifyContent="center" alignItems="center" sx={{ width: 'calc(70vw - 100px)' }}>
         <Grid container direction="row" justifyContent="center">
+          <Tooltip title="Speed">
+            <IconButton onClick={handleClickOpen}>
+              <Speed />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Previous">
             <IconButton onClick={onPreview}>
               <SkipPrevious />
@@ -104,8 +123,8 @@ const Player = () => {
           <Tooltip title={pause ? "Play" : "Pause"}>
             <IconButton onClick={onPlay}>
               {pause
-                ? <PlayArrow />
-                : <Pause />
+                ? <PlayArrow fontSize="large" />
+                : <Pause fontSize="large" />
               }
             </IconButton>
           </Tooltip>
@@ -117,11 +136,17 @@ const Player = () => {
         </Grid>
         <TrackProgress left={currentTime} right={duration} onChange={changeCurrentTime} isVolume={false} />
       </Grid>
-      <Grid container direction="row" wrap="nowrap" justifyContent="space-between" alignItems="center" sx={{ width: '250px' }}>
-        <VolumeUp style={{ marginLeft: 'auto' }} />
+      <Grid container direction="row" wrap="nowrap" justifyContent="space-between" alignItems="center" sx={{ width: '20vw' }}>
+        <VolumeUp style={{ marginLeft: 'auto' }} sx={{ marginTop: '-8px' }} />
         <TrackProgress left={volume} right={100} onChange={changeVolume} isVolume />
       </Grid>
-    </S.PlayerContainer>
+      <SimpleDialogWithCircles
+        selectedValue={selectedSpeedValue}
+        array={speedList}
+        open={openSpeedDialog}
+        onClose={handleClose}
+      />
+    </S.PlayerContainer >
   );
 }
 
