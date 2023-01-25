@@ -27,7 +27,7 @@ export const Image = styled.img`
 `;
 
 export const PlayerContainer = styled.div`
-  height: 60px;
+  height: 100px;
   width: 100%;
   position: fixed;
   bottom: 0;
@@ -36,13 +36,14 @@ export const PlayerContainer = styled.div`
   direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 10px;
+  padding: 10px 10px;
   background-color: lightgray;
 `;
 
 export const InputContainer = styled.div`
   margin: 0 auto;
   width: 'none';
+  margin: 2px 5px 0px 5px;
   input[type=range]{
     width: ${({ isVolume }) => isVolume ? '150px' : 'calc(90vw - 630px)'};
   }

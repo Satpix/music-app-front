@@ -9,9 +9,23 @@ interface TrackProgress {
   onChange: (e) => void,
   isVolume: boolean,
 }
+
+interface values {
+  left: string;
+  right: string;
+}
+
 const TrackProgress: React.FC<TrackProgress> = ({ left, right, onChange, isVolume }) => {
+  const values: values = { left: '', right: ''};
+
+  if (!isVolume) {
+    values.left = Math.floor(left / 60) + ':' + ((`${(left % 60)}`.length < 2) ? `0${(left % 60)}` : (left % 60)); 
+    values.right = Math.floor(right / 60) + ':' + ((`${(right % 60)}`.length < 2) ? `0${(right % 60)}` : (right % 60));
+  }
+
   return (
-    <Grid container justifyContent="center">
+    <Grid container justifyContent="center" wrap="nowrap">
+      <div>{values.left || left}</div>
       <S.InputContainer isVolume={isVolume}>
         <input
           type="range"
@@ -21,7 +35,7 @@ const TrackProgress: React.FC<TrackProgress> = ({ left, right, onChange, isVolum
           onChange={onChange}
         />
       </S.InputContainer>
-      <div>{left} / {right}</div>
+      <div>{values.right || right}</div>
     </Grid>
   );
 }

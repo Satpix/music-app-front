@@ -63,11 +63,11 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
         </Grid>
         {track.text ? (
           <>
-            <h1>Слова в треке</h1>
+            <h1>Lyrics</h1>
             <p>{track.text}</p>
           </>
         ) : null}
-        <h1>Комментарии</h1>
+        <h1>Comments</h1>
         <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
           <TextField
             label="Ваше Имя"
@@ -86,8 +86,8 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
           <div>
             {track.comments?.map(comment =>
               <div>
-                <div>Автор - {comment.username}</div>
-                <div>Комментарий - {comment.text}</div>
+                <div>Author - {comment.username}</div>
+                <div>Comments - {comment.text}</div>
               </div>
             )}
           </div>

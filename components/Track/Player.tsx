@@ -40,9 +40,7 @@ const Player = () => {
   const onNext = () => {
     if (active) {
       const currentIndexTrack = tracks.findIndex(track => active?._id === track._id);
-      console.log(currentIndexTrack);
       const nextIndexTrack = (currentIndexTrack < tracks.length - 1) ? currentIndexTrack + 1 : 0;
-      console.log(nextIndexTrack);
       setActiveTrack(tracks[nextIndexTrack]);
       playTrack();
     }
@@ -81,6 +79,9 @@ const Player = () => {
       }
       audio.ontimeupdate = () => {
         setCurrentTime(Math.ceil(audio.currentTime));
+        if(audio.currentTime === audio.duration) {
+          onNext();
+        }
       }
     }
   }
