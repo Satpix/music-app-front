@@ -6,12 +6,14 @@ import { useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import { GetServerSideProps } from 'next';
+import { v4 as uuidv4 } from 'uuid';
 
 import MainLayout from 'layouts/MainLayout';
 import { ITrack } from 'types/track';
 import { useInput } from 'hooks/useInput';
 
 import * as S from './styled';
+import { StyledLink } from 'components/Link';
 interface TrackPageProps {
   serverTrack: ITrack,
 }
@@ -40,15 +42,15 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
   return (
     <MainLayout title={'Music app - ' + track.name + ' - ' + track.artist} keywords={'Music' + track.name + track.artist}>
       <Box p={4}>
-
-        <Button 
-          startIcon={<ArrowBackIosNew />} 
-          onClick={() => { router.push('/tracks') }}
-          sx={{ fontSize: 24, width: '210px' }}
-          variant="contained"
-        >
-          Back
-        </Button>
+        <StyledLink href={'/tracks'}>
+          <Button
+            startIcon={<ArrowBackIosNew />}
+            sx={{ fontSize: 24, width: '210px' }}
+            variant="contained"
+          >
+            Back
+          </Button>
+        </StyledLink>
         <Grid container direction="row" wrap="nowrap" sx={{ margin: '20px 0px' }}>
           {track?.picture ?
             <Image loader={loaderApiImage} src={`${process.env.NEXT_PUBLIC_BASE_API}/${track.picture}`} alt={track.name} width={210} height={210} />
@@ -63,11 +65,11 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
         </Grid>
         {track.text ? (
           <>
-            <h1>Слова в треке</h1>
+            <h1>Lyrics</h1>
             <p>{track.text}</p>
           </>
         ) : null}
-        <h1>Комментарии</h1>
+        <h1>Comments</h1>
         <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
           <TextField
             label="Ваше Имя"
@@ -85,9 +87,9 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
           <Button onClick={addComment}>Отправить</Button>
           <div>
             {track.comments?.map(comment =>
-              <div>
-                <div>Автор - {comment.username}</div>
-                <div>Комментарий - {comment.text}</div>
+              <div key={uuidv4()}>
+                <div>Author - {comment.username}</div>
+                <div>Comments - {comment.text}</div>
               </div>
             )}
           </div>
@@ -100,7 +102,7 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
 export default TrackPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API}/tracks/` + params.id)
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API}/tracks/` + params?.id)
   return {
     props: {
       serverTrack: response.data

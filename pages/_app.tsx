@@ -19,6 +19,9 @@ interface ThemeInterface {
   colors: {
     primary: string,
     secondary: string,
+    primaryBlack: string,
+    primaryWhite: string,
+    primaryBlue: string,
   }
 }
 
@@ -26,6 +29,9 @@ const theme: ThemeInterface = {
   colors: {
     primary: '#0070f3',
     secondary: '#228B22',
+    primaryBlack: '#000000',
+    primaryWhite: '#ffffff',
+    primaryBlue: '#1976d2',
   },
 }
 

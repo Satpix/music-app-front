@@ -11,6 +11,15 @@ const nextConfig = {
     ],
     minimumCacheTTL: 1500000,
   },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/tracks',
+  //       destination: '/',
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
 }
 
 module.exports = nextConfig
