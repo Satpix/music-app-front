@@ -24,7 +24,7 @@ const TrackProgress: React.FC<TrackProgress> = ({ left, right, onChange, isVolum
   }
 
   return (
-    <Grid container justifyContent="center" wrap="nowrap">
+    <Grid container justifyContent="center" wrap="nowrap" width="auto">
       <div>{values.left || left}</div>
       <S.InputContainer isVolume={isVolume}>
         <Slider

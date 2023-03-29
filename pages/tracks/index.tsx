@@ -1,4 +1,4 @@
-import { Box, Button, Card, Grid, TextField } from '@mui/material';
+import { Box, Button, Card, Grid, IconButton, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { useRouter } from 'next/router';
@@ -10,9 +10,10 @@ import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { useDispatch } from 'react-redux';
 
 import * as S from './styled';
+import { Close } from '@mui/icons-material';
+import { StyledLink } from 'components/Link';
 
 const Index = () => {
-  const router = useRouter();
 
   const { tracks, error } = useTypedSelector(state => state.track);
   const [query, setQuery] = useState<string>('');
@@ -20,17 +21,30 @@ const Index = () => {
   const dispatch = useDispatch() as NextThunkDispatch;
 
 
-  const onSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+  const SearchTracksByTimer = (value: string) => {
     if (timer) {
       clearTimeout(timer);
     }
     setTimer(
       setTimeout(async () => {
-        await dispatch(await searchTracks(e.target.value));
+        await dispatch(searchTracks(value));
       }, 500)
     )
   }
+
+  const onSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    SearchTracksByTimer(e.target.value);
+  }
+
+  const handleClickCancel = () => {
+    setQuery('');
+    SearchTracksByTimer('');
+  }
+
+  const handleMouseDownCancel = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
   if (error) {
     return <MainLayout title='Error - music app'>
@@ -45,7 +59,9 @@ const Index = () => {
           <Box p={4}>
             <Grid container justifyContent="space-between" alignItems="center">
               <h1>Track list</h1>
-              <Button variant="outlined" onClick={() => router.push('/tracks/create')}>Upload</Button>
+              <StyledLink href={'/tracks/create'}>
+                <Button variant="outlined">Upload</Button>
+              </StyledLink>
             </Grid>
             <TextField
               fullWidth
@@ -53,6 +69,17 @@ const Index = () => {
               onChange={onSearch}
               label="Search"
               variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    onClick={handleClickCancel}
+                    onMouseDown={handleMouseDownCancel}
+                    edge="end"
+                  >
+                    {query ? <Close /> : null}
+                  </IconButton>
+                ),
+              }}
             />
           </Box>
           <TrackList tracks={tracks} />

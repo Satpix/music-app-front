@@ -1,4 +1,4 @@
-import { Pause, PlayArrow, Delete } from '@mui/icons-material';
+import { Pause, PlayArrow, Delete, Lyrics, RateReview, Info } from '@mui/icons-material';
 import { Grid, Tooltip } from '@mui/material';
 import { IconButton } from '@mui/material';
 import Image from 'next/image';
@@ -9,12 +9,13 @@ import { useDispatch } from 'react-redux';
 import { useActions } from 'hooks/useActions';
 import { deleteTracks } from 'store/actions-creators/track';
 import { NextThunkDispatch } from 'store/index';
-import { ITrack } from 'types/track';
+import { ITrack } from '../../types/track';
 
 import { CardContainer, TextName, TextArtist } from './styled';
 import { useTypedSelector } from 'hooks/useTypedSelector';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { StyledLink } from 'components/Link';
 
 interface TrackItemProps {
   track: ITrack;
@@ -24,12 +25,17 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const { pause, volume, active, duration, currentTime, audio } = useTypedSelector(state => state.player)
   const router = useRouter()
   const { playTrack, pauseTrack, setActiveTrack, setAudio } = useActions()
-  const [ isActive, setIsActive ] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const dispatch = useDispatch() as NextThunkDispatch;
 
   const handleDelete = async (e) => {
     e.stopPropagation();
     await dispatch(await deleteTracks(track._id));
+  }
+
+  const goToDetails = async (e) => {
+    e.stopPropagation();
+    router.push('/tracks/' + track._id);
   }
 
   const play = (e) => {
@@ -46,7 +52,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       setActiveTrack(track);
       playTrack();
     }
-    if(isActive){
+    if (isActive) {
     }
   }
 
@@ -63,12 +69,12 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   }, [active])
 
   return (
-    <CardContainer onClick={() => router.push('/tracks/' + track._id)}>
+    <CardContainer onClick={(e) => play(e)}>
       <Tooltip title={(isActive && !pause) ? "Pause" : "Play"}>
-        <IconButton onClick={(e) => play(e)}>
+        <IconButton>
           {(isActive && !pause)
             ? <Pause />
-            : <PlayArrow/>
+            : <PlayArrow />
           }
         </IconButton>
       </Tooltip>
@@ -81,6 +87,9 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
         <TextName>{track.name}</TextName>
         <TextArtist>{track.artist}</TextArtist>
       </Grid>
+      <IconButton sx={{ marginLeft: 'auto' }}>
+        <Info onClick={e => goToDetails(e)} />
+      </IconButton>
       <IconButton sx={{ marginLeft: 'auto' }}>
         <Delete onClick={e => handleDelete(e)} />
       </IconButton>

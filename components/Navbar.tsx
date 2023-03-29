@@ -16,11 +16,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { useRouter } from 'next/router';
 import Image from "next/image";
 import { Collections, Favorite, Home } from '@mui/icons-material';
 import ListIcon from '@mui/icons-material/List';
-
+import { StyledLink } from './Link/index';
 import * as S from './styled';
 
 const drawerWidth = 240;
@@ -83,7 +82,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function Navbar() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const router = useRouter();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -135,12 +133,14 @@ export default function Navbar() {
         <Divider />
         <List>
           {menuItems.map(({ text, href, icon }) => (
-            <ListItem key={href} disablePadding onClick={() => router.push(href)}>
+            <ListItem key={href} disablePadding>
               <ListItemButton>
-                <ListItemIcon>
-                  {icon}
-                </ListItemIcon>
-                <ListItemText primary={text} />
+                <StyledLink href={href}>
+                  <ListItemIcon>
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </StyledLink>
               </ListItemButton>
             </ListItem>
           ))}

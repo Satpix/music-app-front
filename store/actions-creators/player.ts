@@ -1,4 +1,4 @@
-import {PlayerAction, PlayerActionTypes} from "types/player";
+import {PlayerAction, PlayerActionTypes} from "../../types/player";
 import {ITrack} from "types/track";
 
 

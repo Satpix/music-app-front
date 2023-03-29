@@ -2,13 +2,13 @@ import { Pause, PlayArrow, SkipNext, SkipPrevious, Speed, VolumeUp } from '@mui/
 import { Grid, IconButton, Tooltip } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ITrack } from 'types/track';
 import { useActions } from '../../hooks/useActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import TrackProgress from './TrackProgress';
 
 import * as S from './styled';
 import SimpleDialogWithCircles from '../Dialogs/SimpleDialogWithCircles';
+import { transformToAudioVolumeFormat } from './helpers';
 
 let previosActive: any;
 
@@ -32,7 +32,7 @@ const Player = () => {
     }
   }
   const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    audio.volume = (Number(e.target.value)) / 100;
+    audio.volume = transformToAudioVolumeFormat(Number(e.target.value));
     setVolume(Number(e.target.value));
   }
 
@@ -76,7 +76,7 @@ const Player = () => {
   const setActiveAudio = () => {
     if (active) {
       audio.src = `${process.env.NEXT_PUBLIC_BASE_API}/${active.audio}`;
-      audio.volume = volume / 100;
+      audio.volume = transformToAudioVolumeFormat(volume);
       audio.onloadedmetadata = () => {
         setDuration(Math.ceil(audio.duration));
       }
@@ -104,11 +104,11 @@ const Player = () => {
   }
   return (
     <S.PlayerContainer>
-      <Grid container direction="column" sx={{ width: '10vw', margin: '0 20px' }}>
+      <S.TrackInfo>
         <S.TextName>{active?.name}</S.TextName>
         <S.TextArtist>{active?.artist}</S.TextArtist>
-      </Grid>
-      <Grid container direction="column" wrap="nowrap" justifyContent="center" alignItems="center" sx={{ width: 'calc(70vw - 100px)' }}>
+      </S.TrackInfo>
+      <S.ProgressContainer isVolume={false}>
         <Grid container direction="row" justifyContent="center">
           <Tooltip title="Speed">
             <IconButton onClick={handleClickOpen}>
@@ -133,13 +133,22 @@ const Player = () => {
               <SkipNext />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Speed">
+            <IconButton onClick={handleClickOpen}>
+              <Speed />
+            </IconButton>
+          </Tooltip>
         </Grid>
         <TrackProgress left={currentTime} right={duration} onChange={changeCurrentTime} isVolume={false} />
-      </Grid>
-      <Grid container direction="row" wrap="nowrap" justifyContent="space-between" alignItems="center" sx={{ width: '20vw' }}>
-        <VolumeUp style={{ marginLeft: 'auto' }} sx={{ marginTop: '-8px' }} />
+      </S.ProgressContainer>
+      <S.ProgressContainer isVolume>
+        <Tooltip title="Mute">
+          <IconButton>
+            <VolumeUp style={{ marginLeft: 'auto' }} sx={{ marginTop: '-8px' }} />
+          </IconButton>
+        </Tooltip>
         <TrackProgress left={volume} right={100} onChange={changeVolume} isVolume />
-      </Grid>
+      </S.ProgressContainer>
       <SimpleDialogWithCircles
         selectedValue={selectedSpeedValue}
         array={speedList}
